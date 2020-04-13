@@ -28,7 +28,7 @@ export default class Validator extends Command {
     this.log(`Validating mobile number ${number}`);
 
     t.validate(number, result => {
-      this.log(result);
+      this.log("Result is", result);
     });
   }
 }

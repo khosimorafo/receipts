@@ -26,6 +26,7 @@ export default class Twilio {
       .phoneNumbers(number)
       .fetch({ countryCode: "ZA", type: ["carrier"] })
       .then((phone_number: { carrier: any }) => {
+        //console.log(phone_number);
         cb({ result: phone_number });
       });
   }

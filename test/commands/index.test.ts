@@ -4,6 +4,7 @@ import { agent as request } from "supertest";
 
 describe("Index Test", () => {
   it("should POST /twilio/send", async function() {
+    this.timeout(10000);
     const res = await request(app)
       .post("/twilio/send")
       .send({ number: "27823414062", message: "Just mocha tests." });
@@ -14,6 +15,7 @@ describe("Index Test", () => {
   });
 
   it("should GET /twilio/validate", async function() {
+    this.timeout(10000);
     const res = await request(app)
       .get("/twilio/validate")
       .send({ number: "27823414062" });

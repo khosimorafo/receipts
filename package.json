@@ -83,7 +83,7 @@
     "build": "npm-run-all clean tsc copy-assets",
     "build:deploy": "npm-run-all build deploy",
     "dev": "nodemon --watch src -e ts,ejs --exec npm run build:deploy",
-    "test-dev": "nodemon --watch . --ext ts,ejs --exec \"mocha -r ts-node/register test/**/*.test.ts\"",
+    "test:dev": "mocha -r ts-node/register test/**/*.test.ts",
     "deploy": "node lib/index.js",
     "start": "npm run build:deploy",
     "start:watch": "nodemon"

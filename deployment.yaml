@@ -1,0 +1,39 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: receipts
+  labels:
+    app: receipts
+spec:
+  ports:
+    - port: 3001
+  selector:
+    app: receipts
+    tier: frontend
+  type: LoadBalancer
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: receipts
+  labels:
+    app: receipts
+spec:
+  selector:
+    matchLabels:
+      app: receipts
+      tier: frontend
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: receipts
+        tier: frontend
+    spec:
+      containers:
+        - image: gcr.io/avid-task-267106/receipts:0.0.1
+          name: receipts
+          ports:
+            - containerPort: 3001
+              name: receipts

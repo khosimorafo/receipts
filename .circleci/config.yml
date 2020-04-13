@@ -1,0 +1,54 @@
+version: 2
+jobs:
+  build:
+    docker:
+      - image: gcr.io/avid-task-267106/receipts:0.0.1
+    working_directory: ~/workspace
+    environment:
+      DEPLOYMENT_NAME: receipts
+      PROJECT_ID: avid-task-267106
+      CLUSTER_NAME: mastende-cluster
+      CLUSTER_NAME_STAG: receipts-stag
+      CLOUDSDK_COMPUTE_ZONE: europe-west4-a
+      CONTAINER_NAME: receipts
+      IMAGE: receipts
+      REG_ID: receipts
+      REG_ID_PROD: receipts-prod
+      IMG_TAG: 0.0.1
+      PROJECT_NAME: receipts
+      DEPLOYMENT_ENVIRONMENT: production
+    steps:
+      - checkout
+      - setup_remote_docker
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - run:
+          name: Install node packages
+          command: |
+            npm install
+
+      - run:
+          name: Start app
+          command: |
+            npm start &
+      - run:
+          name: Run tests
+          command: |
+            npm test:dev
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
+
+      - run:
+          name: Build and Deploy
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+              ./deployment.sh
+            fi
