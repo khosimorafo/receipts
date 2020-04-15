@@ -2,38 +2,35 @@ apiVersion: v1
 kind: Service
 metadata:
   name: receipts
-  labels:
-    app: receipts
 spec:
-  ports:
-    - port: 3001
+  type: LoadBalancer
   selector:
     app: receipts
-    tier: frontend
-  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 8080
 ---
-apiVersion: apps/v1beta1
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: receipts
-  labels:
-    app: receipts
 spec:
+  replicas: 1
   selector:
     matchLabels:
       app: receipts
-      tier: frontend
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
         app: receipts
-        tier: frontend
     spec:
       containers:
-        - image: gcr.io/avid-task-267106/receipts:0.0.1
-          name: receipts
+        - name: receipts
+          # Replace $GCLOUD_PROJECT with your project ID
+          image: gcr.io/mastende-backend/receipts:latest
+          # This app listens on port 8080 for web traffic by default.
           ports:
-            - containerPort: 3001
-              name: receipts
+            - containerPort: 8080
+          env:
+            - name: PORT
+              value: "8080"

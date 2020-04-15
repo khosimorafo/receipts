@@ -1,9 +1,20 @@
-FROM node
-ENV NPM_CONFIG_LOGLEVEL warn
-RUN mkdir -p /usr/src/app
-EXPOSE 3000
+# Use the official lightweight Node.js 10 image.
+# https://hub.docker.com/_/node
+FROM node:10-slim
+
+# Create and change to the app directory.
 WORKDIR /usr/src/app
-ADD package.json /usr/src/app/
-RUN npm install --production
-ADD . /usr/src/app/
-ENTRYPOINT ["npm", "start"]
+
+# Copy application dependency manifests to the container image.
+# A wildcard is used to ensure both package.json AND package-lock.json are copied.
+# Copying this separately prevents re-running npm install on every code change.
+COPY package*.json ./
+
+# Install production dependencies.
+RUN npm install --only=production
+
+# Copy local code to the container image.
+COPY . ./
+
+# Run the web service on container startup.
+CMD [ "npm", "start" ]
