@@ -75,6 +75,7 @@
     "postpack": "rm -f oclif.manifest.json",
     "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
     "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
+    "test:secret": "nyc --extension .ts mocha --forbid-only \"test/**/*secrets.test.ts\"",
     "version": "oclif-dev readme && git add README.md",
     "clean": "rimraf lib/*",
     "copy-assets": "ts-node src/tools/assets",
